@@ -14,22 +14,17 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		System.out.println("================欢迎使用大音开源医疗智能系统!婉莹我就要成功啦!==============");
 		Map<String, List<String>> usersynd = new HashMap<String, List<String>>();
 		String url = "http://localhost:8080/areY.jhtml";
 		do {
 			System.out.print("请输入病症:");
-			Scanner scanner = new Scanner(System.in);
-			String synd=scanner.next().trim();
+			/*Scanner scanner = new Scanner(System.in);
+			String synd=scanner.next().trim();*/
 			 BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 			//String synd = "大便秘结 ".trim();
 			try {
-				String param = "syndname=" + DigestUtils.md5Hex(synd.trim());
+				String param = "syndname=" + DigestUtils.md5Hex("大便秘结");
 				String data = HttpUtil.sendPost(url, param);
 				String result = new String(data.getBytes(), "UTF-8");
 				if ("0".equals(result)) {

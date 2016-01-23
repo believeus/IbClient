@@ -1,5 +1,7 @@
 package cn.ibelieveus.main;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		System.out.println();
 		System.out.println();
 		System.out.println();
@@ -24,11 +26,12 @@ public class Main {
 			System.out.print("请输入病症:");
 			Scanner scanner = new Scanner(System.in);
 			String synd=scanner.next().trim();
+			 BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 			//String synd = "大便秘结 ".trim();
 			try {
 				String param = "syndname=" + DigestUtils.md5Hex(synd.trim());
 				String data = HttpUtil.sendPost(url, param);
-				String result = new String(data.getBytes(), "utf-8");
+				String result = new String(data.getBytes(), "UTF-8");
 				if ("0".equals(result)) {
 					System.out.println("对不起!系统还未收录此症状,请重新输入");
 				} else {
@@ -49,11 +52,11 @@ public class Main {
 						//System.out.println(key + ":" + usersynd.get(key).toString());
 						for (String syndname : usersynd.get(key)) {
 							System.out.println("您是否有  [" + syndname + "]  的症状?");
-							System.out.print("请输入:<y/n>?");
+							System.out.print("<Enter>键代表确定,<n>键代表否：");
 							String r = "";
 							do {
-								r = scanner.next();
-								if ("y".equalsIgnoreCase(r)) {
+								r = bf.readLine();
+								if (r.length()==0) {
 									if (dSet.get(key) == null) {
 										List<String> syndList = new ArrayList<String>();
 										syndList.add(syndname);
@@ -67,18 +70,23 @@ public class Main {
 									System.out.println();
 									break;
 								}else {
-									System.out.println("请输入:<y/n>?");
+									System.out.println("<Enter>键代表确定,<n>键代表否：");
 								}
 								System.out.println();
 							} while (true);
 							
 						}
 					}
-					System.out.println("你得的病是:"+dSet.keySet().toString());
+					System.out.println("病证："+dSet.keySet());
+					System.out.println("症状："+dSet.values().toString().replaceAll("\\[|\\]",""));
+					System.out.println("方剂：白虎汤");
+					System.out.println("组方：知母15   粳米20   石膏（碎）30   甘草10");
+					System.out.println("用法：煎剂，一日一剂，煎米熟，去渣，将余药另煎后混合，一日三次温服。");
 					return;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.exit(0);
 			}
 		} while (true);
 
